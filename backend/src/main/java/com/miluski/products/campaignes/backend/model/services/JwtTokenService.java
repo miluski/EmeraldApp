@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class JwtTokenService {
 
     @Value("${jwt.secret}")
-    private String secret;
+    public String secret;
 
     public String generateToken(String username) {
         return Jwts.builder().setClaims(new HashMap<>()).setSubject(username)
