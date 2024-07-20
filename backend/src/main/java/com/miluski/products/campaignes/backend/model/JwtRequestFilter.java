@@ -30,7 +30,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @SuppressWarnings("null")
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
         if (requestURI.equals("/api/auth/user/login") || requestURI.equals("/api/auth/user/logout")
