@@ -1,5 +1,8 @@
 import { Provider } from "react-redux";
-import { createHashRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider
+} from "react-router-dom";
 import { combineReducers, legacy_createStore } from "redux";
 import { userReducer } from "./utils/userReducer";
 import AccessDenied from "./views/AccessDenied";
@@ -8,7 +11,7 @@ import LoginView from "./views/LoginView";
 import MainPage from "./views/MainPage";
 import NotFound from "./views/NotFound";
 
-const hashRouter = createHashRouter([
+const browserRouter = createBrowserRouter([
   {
     path: "/",
     children: [
@@ -34,7 +37,7 @@ function App() {
   const store = legacy_createStore(reducers);
   return (
     <Provider store={store}>
-      <RouterProvider router={hashRouter} />
+      <RouterProvider router={browserRouter} />
     </Provider>
   );
 }
