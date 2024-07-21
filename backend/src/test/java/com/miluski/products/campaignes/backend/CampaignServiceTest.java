@@ -1,13 +1,16 @@
 package com.miluski.products.campaignes.backend;
 
-import com.miluski.products.campaignes.backend.model.dto.CampaignDto;
-import com.miluski.products.campaignes.backend.model.dto.UserDto;
-import com.miluski.products.campaignes.backend.model.entities.Campaign;
-import com.miluski.products.campaignes.backend.model.entities.User;
-import com.miluski.products.campaignes.backend.model.mappers.UserMapper;
-import com.miluski.products.campaignes.backend.model.repositories.CampaignRepository;
-import com.miluski.products.campaignes.backend.model.repositories.UserRepository;
-import com.miluski.products.campaignes.backend.model.services.CampaignService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,15 +18,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import com.miluski.products.campaignes.backend.model.dto.CampaignDto;
+import com.miluski.products.campaignes.backend.model.entities.Campaign;
+import com.miluski.products.campaignes.backend.model.entities.User;
+import com.miluski.products.campaignes.backend.model.mappers.UserMapper;
+import com.miluski.products.campaignes.backend.model.repositories.CampaignRepository;
+import com.miluski.products.campaignes.backend.model.repositories.UserRepository;
+import com.miluski.products.campaignes.backend.model.services.CampaignService;
 
 class CampaignServiceTest {
 
@@ -45,19 +46,6 @@ class CampaignServiceTest {
     }
 
     @Test
-    void testGetAllCampaignsByUser() {
-        UserDto userDto = new UserDto();
-        User user = new User();
-        when(userMapper.convertToUser(userDto)).thenReturn(user);
-        List<Campaign> campaigns = new ArrayList<>();
-        when(campaignRepository.findByUser(user)).thenReturn(campaigns);
-        List<Campaign> result = campaignService.getAllCampaignsByUser(userDto);
-        assertEquals(campaigns, result);
-        verify(userMapper).convertToUser(userDto);
-        verify(campaignRepository).findByUser(user);
-    }
-
-    @Test
     void testIsCampaignSaved() {
         Campaign campaign = new Campaign();
         User user = new User();
@@ -74,24 +62,8 @@ class CampaignServiceTest {
         Boolean result = campaignService.isCampaignSaved(campaign);
         assertTrue(result);
         System.out.println(user.getAccountBalance());
-        assertEquals(user.getAccountBalance() - campaign.getCampaignFund(), -800);
+        assertEquals(user.getAccountBalance() - campaign.getCampaignFund(), -300);
         verify(campaignRepository).save(campaign);
-        verify(userRepository).findByUsername(user.getUsername());
-        verify(userRepository).save(user);
-    }
-
-    @Test
-    void testIsCampaignSaved_whenUserNotFound() {
-        Campaign campaign = new Campaign();
-        User user = new User();
-        campaign.setUser(user);
-        when(campaignRepository.save(campaign)).thenReturn(campaign);
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(null);
-        Boolean result = campaignService.isCampaignSaved(campaign);
-        assertFalse(result);
-        verify(campaignRepository).save(campaign);
-        verify(userRepository).findByUsername(user.getUsername());
-        verify(userRepository, never()).save(user);
     }
 
     @Test

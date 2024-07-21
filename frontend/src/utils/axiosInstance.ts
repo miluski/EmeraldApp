@@ -32,16 +32,15 @@ axiosInstance.interceptors.response.use(
     if (response && response.status === 401) {
       const accessToken = localStorage.getItem("accessToken") ?? "";
       accessToken.replace("\"", "");
-      const { data, status } = await axiosInstance.post(
-        "/api/auth/tokens/refresh",
-        accessToken
+      const { data, status } = await axiosInstance.get(
+        "/api/auth/tokens/refresh"
       );
       localStorage.setItem("isLoggedIn", String(status === 200));
       localStorage.setItem("accessToken", data);
       return config != undefined
         ? new Promise((resolve: Function) => {
             config.headers["Authorization"] = data;
-            resolve(axiosInstance(config as InternalAxiosRequestConfig<any>));
+            resolve(axiosInstance(config));
           })
         : Promise.reject(error);
     } else if (response && response.status === 403) {

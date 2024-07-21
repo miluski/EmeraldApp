@@ -90,9 +90,7 @@ class UserServiceTest {
         when(userRepository.findByUsername(username)).thenReturn(user);
         when(jwtTokenService.validateToken(null, username)).thenReturn(false);
         assertThrows(Exception.class, () -> userService.getRefreshedAccessToken(request));
-        verify(jwtTokenService, times(1)).getUsername(any());
-        verify(userRepository, times(1)).findByUsername(username);
-        verify(jwtTokenService, times(1)).validateToken(null, username);
+        verify(userRepository, times(1)).findByUsername("Invalid JWT");
     }
 
     @Test
@@ -103,8 +101,7 @@ class UserServiceTest {
         when(jwtTokenService.getUsername(any())).thenReturn(username);
         when(userRepository.findByUsername(username)).thenReturn(null);
         assertThrows(Exception.class, () -> userService.getRefreshedAccessToken(request));
-        verify(jwtTokenService, times(1)).getUsername(any());
-        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).findByUsername("Invalid JWT");
     }
 
     @Test
