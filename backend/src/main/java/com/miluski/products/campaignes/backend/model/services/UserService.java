@@ -36,6 +36,7 @@ public class UserService {
                     user.getPassword());
             this.authenticationManager.authenticate(authentication);
             User retrievedUser = userRepository.findByUsername(userDto.getUsername());
+            System.out.println(retrievedUser.getUsername());
             return userMapper.convertToUserDto(retrievedUser);
         } catch (Exception e) {
             System.out.println(e.getMessage());
