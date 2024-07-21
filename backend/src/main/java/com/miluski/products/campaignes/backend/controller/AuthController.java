@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/auth")
-@CrossOrigin(origins = "https://emerald-app-a1d948364be8.herokuapp.com/", methods = { RequestMethod.GET,
-        RequestMethod.POST }, allowCredentials = "true")
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET,
+        RequestMethod.POST })
 public class AuthController {
 
     private final UserService userService;
