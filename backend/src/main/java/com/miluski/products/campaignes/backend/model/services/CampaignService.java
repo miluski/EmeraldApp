@@ -7,42 +7,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.miluski.products.campaignes.backend.model.dto.CampaignDto;
-import com.miluski.products.campaignes.backend.model.dto.UserDto;
-import com.miluski.products.campaignes.backend.model.entities.*;
-import com.miluski.products.campaignes.backend.model.mappers.UserMapper;
-import com.miluski.products.campaignes.backend.model.repositories.*;
+import com.miluski.products.campaignes.backend.model.entities.Campaign;
+import com.miluski.products.campaignes.backend.model.entities.User;
+import com.miluski.products.campaignes.backend.model.repositories.CampaignRepository;
+import com.miluski.products.campaignes.backend.model.repositories.UserRepository;
 
 @Service
 public class CampaignService {
 
     private final CampaignRepository campaignRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     @Autowired
-    public CampaignService(CampaignRepository campaignRepository, UserRepository userRepository,
-            UserMapper userMapper) {
+    public CampaignService(CampaignRepository campaignRepository, UserRepository userRepository) {
         this.campaignRepository = campaignRepository;
         this.userRepository = userRepository;
-        this.userMapper = userMapper;
     }
 
-    public List<Campaign> getAllCampaignsByUser(UserDto userDto) {
-        User user = userMapper.convertToUser(userDto);
-        return campaignRepository.findByUser(user);
+    public List<Campaign> getAllCampaignsByUserId(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.isPresent() ? campaignRepository.findByUser(user.get()) : null;
     }
 
     public Boolean isCampaignSaved(Campaign campaign) {
         try {
             campaignRepository.save(campaign);
-            User user = campaign.getUser();
-            User dbUser = userRepository.findByUsername(user.getUsername());
-            if (dbUser != null) {
-                user.setAccountBalance(user.getAccountBalance() - campaign.getCampaignFund());
-                userRepository.save(user);
-                return true;
-            }
-            return false;
+            return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return false;
@@ -92,5 +82,14 @@ public class CampaignService {
             return true;
         }
         return false;
+    }
+
+    public void updateUserBalance(Campaign campaign) {
+        User user = campaign.getUser();
+        User dbUser = userRepository.findByUsername(user.getUsername());
+        if (dbUser != null) {
+            dbUser.setAccountBalance(dbUser.getAccountBalance() - campaign.getCampaignFund());
+            userRepository.save(dbUser);
+        }
     }
 }

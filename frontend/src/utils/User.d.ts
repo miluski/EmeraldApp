@@ -8,5 +8,7 @@ export type User = {
     isUsernameValid?: boolean;
     isPasswordValid?: boolean;
     isLoginSuccessfull?: boolean;
+    isLoginAttemptStarted?: boolean;
+    isLogoutAttemptStarted?: boolean;
     userReducer?: Reducer<User, User>;
 }

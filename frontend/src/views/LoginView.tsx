@@ -1,4 +1,4 @@
-import { Alert, Button, TextField } from "@mui/material";
+import { Alert, Button, CircularProgress, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import emeraldImage from "../assets/emerald.png";
@@ -15,6 +15,7 @@ export default function LoginView() {
     isUsernameValid,
     isPasswordValid,
     isLoginSuccessfull,
+    isLoginAttemptStarted,
   } = useSelector((state: User) => state.userReducer as unknown as User);
   return (
     <div className="flex items-center justify-center w-full h-screen">
@@ -67,6 +68,11 @@ export default function LoginView() {
           </Alert>
         ) : (
           <></>
+        )}
+        {isLoginAttemptStarted && (
+          <div className="absolute top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50">
+            <CircularProgress className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+          </div>
         )}
       </div>
     </div>

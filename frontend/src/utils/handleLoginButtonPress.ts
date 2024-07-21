@@ -1,7 +1,10 @@
 import { Dispatch, UnknownAction } from "redux";
 import { axiosInstance } from "./axiosInstance";
 import { User } from "./User";
-import { CHANGE_IS_LOGIN_SUCCESSFULL } from "./UserActionTypes";
+import {
+  CHANGE_IS_LOGIN_ATTEMPT_STARTED,
+  CHANGE_IS_LOGIN_SUCCESSFULL,
+} from "./UserActionTypes";
 import { validateData } from "./validateData";
 
 export async function handleLoginButtonPress(
@@ -9,10 +12,17 @@ export async function handleLoginButtonPress(
   dispatch: Dispatch<UnknownAction>,
   navigate: any
 ): Promise<void> {
+  dispatch({
+    type: CHANGE_IS_LOGIN_ATTEMPT_STARTED,
+    isLoginAttemptStarted: true,
+  });
   const isDataValid = validateData(user, dispatch);
   if (isDataValid) {
     const response = await axiosInstance.post("/api/auth/user/login", user);
-    console.log(response.status)
+    dispatch({
+      type: CHANGE_IS_LOGIN_ATTEMPT_STARTED,
+      isLoginAttemptStarted: false,
+    });
     if (response.status === 403) {
       dispatch({
         type: CHANGE_IS_LOGIN_SUCCESSFULL,
