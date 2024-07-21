@@ -13,8 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/auth")
-@CrossOrigin(origins = { "http://localhost:5173/",
-        "https://miluski.github.io/RecruitmentTask/" }, methods = { RequestMethod.GET,
+@CrossOrigin(origins = "*", methods = { RequestMethod.GET,
                 RequestMethod.POST }, allowCredentials = "true")
 public class AuthController {
 
