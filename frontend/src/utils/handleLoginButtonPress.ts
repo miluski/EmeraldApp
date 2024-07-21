@@ -6,11 +6,14 @@ import { validateData } from "./validateData";
 
 export async function handleLoginButtonPress(
   user: User,
-  dispatch: Dispatch<UnknownAction>
+  dispatch: Dispatch<UnknownAction>,
+  navigate: any
 ): Promise<void> {
   const isDataValid = validateData(user, dispatch);
   if (isDataValid) {
-    const response = await axiosInstance.post("/api/auth/user/login", user);
+    const response = await axiosInstance.post("/api/auth/user/login", user, {
+      withCredentials: true,
+    });
     if (response.status === 403) {
       dispatch({
         type: CHANGE_IS_LOGIN_SUCCESSFULL,
@@ -23,7 +26,7 @@ export async function handleLoginButtonPress(
       });
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userCredentials", JSON.stringify(response.data));
-      window.location.href = "/RecruitmentTask/main-page";
+      navigate("main-page");
     }
   }
 }
