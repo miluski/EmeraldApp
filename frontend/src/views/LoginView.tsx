@@ -1,5 +1,6 @@
 import { Alert, Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import emeraldImage from "../assets/emerald.png";
 import { handleLoginButtonPress } from "../utils/handleLoginButtonPress";
 import { User } from "../utils/User";
@@ -7,6 +8,7 @@ import { CHANGE_PASSWORD, CHANGE_USERNAME } from "../utils/UserActionTypes";
 
 export default function LoginView() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {
     username,
     password,
@@ -52,7 +54,8 @@ export default function LoginView() {
                 username: username,
                 password: password,
               },
-              dispatch
+              dispatch,
+              navigate
             )
           }
         >
