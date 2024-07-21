@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.*;
 import com.miluski.products.campaignes.backend.model.dto.UserDto;
 import com.miluski.products.campaignes.backend.model.services.UserService;
 
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/auth")
-@CrossOrigin(origins = "https://miluski.github.io/RecruitmentTask/", allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:5173/",
+        "https://miluski.github.io/RecruitmentTask/" }, methods = { RequestMethod.GET,
+                RequestMethod.POST }, allowCredentials = "true")
 public class AuthController {
 
     private final UserService userService;
@@ -20,13 +23,15 @@ public class AuthController {
     @Autowired
     public AuthController(UserService userService) {
         this.userService = userService;
-    } 
+    }
 
     @PostMapping("/user/login")
     public ResponseEntity<?> handleLoginRequest(@RequestBody UserDto userDto, HttpServletRequest request,
             HttpServletResponse response) {
+        System.out.println("It works");
         UserDto authenticatedUserObject = userService.getAuthenticatedUserObject(userDto);
         if (authenticatedUserObject != null) {
+            System.out.println("It is here");
             userService.setSessionTokens(request, response, userDto.getUsername());
             return ResponseEntity.status(HttpStatus.OK).body(authenticatedUserObject);
         } else {
