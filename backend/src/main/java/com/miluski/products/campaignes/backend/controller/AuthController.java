@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/auth")
-@CrossOrigin(origins = "http://localhost:5173", methods = { RequestMethod.GET,
-                RequestMethod.POST }, allowCredentials = "true")
+@CrossOrigin(origins = "https://emerald-app-a1d948364be8.herokuapp.com", methods = { RequestMethod.GET,
+        RequestMethod.POST }, allowCredentials = "true")
 public class AuthController {
 
     private final UserService userService;
@@ -27,10 +27,8 @@ public class AuthController {
     @PostMapping("/user/login")
     public ResponseEntity<?> handleLoginRequest(@RequestBody UserDto userDto, HttpServletRequest request,
             HttpServletResponse response) {
-        System.out.println("It works");
         UserDto authenticatedUserObject = userService.getAuthenticatedUserObject(userDto);
         if (authenticatedUserObject != null) {
-            System.out.println("It is here");
             userService.setSessionTokens(request, response, userDto.getUsername());
             return ResponseEntity.status(HttpStatus.OK).body(authenticatedUserObject);
         } else {
