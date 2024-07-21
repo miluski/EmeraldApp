@@ -103,7 +103,7 @@ public class UserService {
     private Cookie getCookie(String cookieName, String token) {
         Cookie cookie = new Cookie(cookieName, token);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         return cookie;
     }
