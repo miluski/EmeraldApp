@@ -28,7 +28,7 @@ export default function AddCampaignForm() {
     setCampaignData({ ...campaignData, [name]: value });
   };
 
-  const handleSliderChange = (event: any, newValue: any) => {
+  const handleSliderChange = (_event: any, newValue: any) => {
     setCampaignData({ ...campaignData, radius: newValue });
   };
 
