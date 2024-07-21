@@ -105,6 +105,7 @@ public class UserService {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
+        cookie.setAttribute("SameSite", "None");
         return cookie;
     }
 
