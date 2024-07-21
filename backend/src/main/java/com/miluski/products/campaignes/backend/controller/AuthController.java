@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/auth")
-@CrossOrigin(origins = "*", methods = { RequestMethod.GET,
-        RequestMethod.POST })
 public class AuthController {
 
     private final UserService userService;
