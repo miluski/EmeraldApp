@@ -1,9 +1,7 @@
 import { axiosInstance } from "./axiosInstance";
 
 export async function handleLogoutButtonPress(navigate: any): Promise<void> {
-  const response = await axiosInstance.post("/api/auth/user/logout", {
-    withCredentials: true,
-  });
+  const response = await axiosInstance.post("/api/auth/user/logout");
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("userCredentials");
   response.status === 200

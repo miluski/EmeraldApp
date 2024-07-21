@@ -11,9 +11,7 @@ export async function handleLoginButtonPress(
 ): Promise<void> {
   const isDataValid = validateData(user, dispatch);
   if (isDataValid) {
-    const response = await axiosInstance.post("/api/auth/user/login", user, {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.post("/api/auth/user/login", user);
     if (response.status === 403) {
       dispatch({
         type: CHANGE_IS_LOGIN_SUCCESSFULL,
