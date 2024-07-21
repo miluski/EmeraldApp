@@ -33,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf((csrf) -> csrf.disable())
+                .cors((cors) -> cors.disable())
                 .headers((headers) -> headers
                         .frameOptions((frameOptions) -> frameOptions.disable()))
                 .sessionManagement((sessionManagement) -> sessionManagement
