@@ -26,17 +26,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  campaignName: string,
-  keywords: string[],
-  bidAmount: number,
-  campaignFund: number,
-  status: "on" | "off",
-  town: string,
-  radius: number
-) {
-  return { campaignName, keywords, bidAmount, campaignFund, status, town, radius };
-}
+// function createData(
+//   campaignName: string,
+//   keywords: string[],
+//   bidAmount: number,
+//   campaignFund: number,
+//   status: "on" | "off",
+//   town: string,
+//   radius: number
+// ) {
+//   return { campaignName, keywords, bidAmount, campaignFund, status, town, radius };
+// }
 
 const rows: any[] = [
 ];
