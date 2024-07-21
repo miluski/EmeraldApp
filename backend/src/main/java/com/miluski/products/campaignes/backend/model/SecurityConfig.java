@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .cors((cors) -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.addAllowedOrigin("*");
+                    config.addAllowedOrigin("https://emerald-app-88c863e81f66.herokuapp.com");
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
                     return config;
