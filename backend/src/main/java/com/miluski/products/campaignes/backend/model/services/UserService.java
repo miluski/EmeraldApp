@@ -1,16 +1,17 @@
 package com.miluski.products.campaignes.backend.model.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.*;
-import org.springframework.stereotype.Service;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 
 import com.miluski.products.campaignes.backend.model.dto.UserDto;
 import com.miluski.products.campaignes.backend.model.entities.User;
 import com.miluski.products.campaignes.backend.model.mappers.UserMapper;
 import com.miluski.products.campaignes.backend.model.repositories.UserRepository;
 
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class UserService {
@@ -43,10 +44,9 @@ public class UserService {
         }
     }
 
-    public Boolean getIsUserLogoutCorrectly(HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse) {
+    public Boolean getIsUserLogoutCorrectly(HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization").substring(7);
         try {
-            String accessToken = jwtTokenService.getTokenFromCookies(httpServletRequest);
             if (accessToken == null) {
                 throw new Exception("No access token found");
             }
@@ -58,7 +58,6 @@ public class UserService {
             } else {
                 return false;
             }
-            removeHttpSession(httpServletRequest, httpServletResponse);
             return true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -66,15 +65,15 @@ public class UserService {
         }
     }
 
-    public void handleRefreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+    public String getRefreshedAccessToken(HttpServletRequest request)
             throws Exception {
-        String accessToken = jwtTokenService.getTokenFromCookies(httpServletRequest);
+        String accessToken = request.getHeader("Authorization").substring(7);
         String username = jwtTokenService.getUsername(accessToken);
         User user = userRepository.findByUsername(username);
         if (user != null) {
             Boolean isRefreshTokenValid = jwtTokenService.validateToken(user.getRefreshToken(), user.getUsername());
             if (isRefreshTokenValid) {
-                setSessionTokens(httpServletRequest, httpServletResponse, user.getUsername());
+                return getAccessToken(user.getUsername());
             } else {
                 throw new Exception("Refresh token is not valid");
             }
@@ -83,16 +82,14 @@ public class UserService {
         }
     }
 
-    public void setSessionTokens(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-            String username) {
-        httpServletRequest.getSession(true);
+    public String getAccessToken(String username) {
         String accessToken = jwtTokenService.generateToken(username);
         String refreshToken = jwtTokenService.generateRefreshToken(username);
         assignRefreshTokenToUser(username, refreshToken);
-        httpServletResponse.addCookie(getCookie("access_token", accessToken));
+        return accessToken;
     }
 
-    private void assignRefreshTokenToUser(String username, String refreshToken) {
+    public void assignRefreshTokenToUser(String username, String refreshToken) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             user.setRefreshToken(refreshToken);
@@ -100,25 +97,4 @@ public class UserService {
         }
     }
 
-    private Cookie getCookie(String cookieName, String token) {
-        Cookie cookie = new Cookie(cookieName, token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setAttribute("SameSite", "None");
-        return cookie;
-    }
-
-    private void removeHttpSession(HttpServletRequest httpServletRequest, HttpServletResponse response)
-            throws IllegalStateException {
-        HttpSession httpSession = httpServletRequest.getSession(false);
-        Cookie[] cookies = httpServletRequest.getCookies();
-        for (Cookie cookie : cookies) {
-            cookie.setMaxAge(0);
-            cookie.setValue(null);
-            cookie.setPath("/");
-            response.addCookie(cookie);
-        }
-        httpSession.invalidate();
-    }
 }

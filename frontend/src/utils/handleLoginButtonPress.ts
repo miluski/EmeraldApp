@@ -12,6 +12,7 @@ export async function handleLoginButtonPress(
   const isDataValid = validateData(user, dispatch);
   if (isDataValid) {
     const response = await axiosInstance.post("/api/auth/user/login", user);
+    console.log(response.status)
     if (response.status === 403) {
       dispatch({
         type: CHANGE_IS_LOGIN_SUCCESSFULL,
@@ -23,7 +24,11 @@ export async function handleLoginButtonPress(
         isLoginSuccessfull: true,
       });
       localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userCredentials", JSON.stringify(response.data));
+      localStorage.setItem(
+        "userCredentials",
+        JSON.stringify(response.data.userCredentials)
+      );
+      localStorage.setItem("accessToken", response.data.accessToken);
       navigate("main-page");
     }
   }
