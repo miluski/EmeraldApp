@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://recruitment-task-3f89e975c6d3.herokuapp.com/",
+  baseURL: "/server",
   headers: {
     "Content-Type": "application/json",
   },

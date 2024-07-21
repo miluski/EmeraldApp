@@ -5,6 +5,6 @@ export const GuardView = ({ children }: { children: React.ReactElement }) => {
   return isLoggedIn ? (
     children
   ) : (
-    <Navigate to="/RecruitmentTask/unauthorized" />
+    <Navigate to="/unauthorized" />
   );
 };
