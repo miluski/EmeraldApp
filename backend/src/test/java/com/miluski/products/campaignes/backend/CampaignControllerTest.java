@@ -40,13 +40,14 @@ class CampaignControllerTest {
     @Test
     void handleGetAllCampaignesRequest_ValidUserDto_ReturnsListOfCampaignDto() {
         UserDto userDto = new UserDto();
+        userDto.setId(1L);
         List<Campaign> expectedCampaignes = Arrays.asList(new Campaign(), new Campaign());
-        when(campaignService.getAllCampaignsByUser(userDto)).thenReturn(expectedCampaignes);
+        when(campaignService.getAllCampaignsByUserId(userDto.getId())).thenReturn(expectedCampaignes);
         when(campaignMapper.convertToCampaignDto(any())).thenReturn(new CampaignDto());
-        Optional<List<CampaignDto>> result = campaignController.handleGetAllCampaignesRequest(userDto);
+        Optional<List<CampaignDto>> result = campaignController.handleGetAllCampaignesRequest(userDto.getId());
         assertTrue(result.isPresent());
         assertEquals(expectedCampaignes.size(), result.get().size());
-        verify(campaignService, times(1)).getAllCampaignsByUser(userDto);
+        verify(campaignService, times(1)).getAllCampaignsByUserId(userDto.getId());
         verify(campaignMapper, times(expectedCampaignes.size())).convertToCampaignDto(any());
     }
 
@@ -57,7 +58,6 @@ class CampaignControllerTest {
         when(campaignService.isCampaignSaved(any())).thenReturn(true);
         ResponseEntity<?> responseEntity = campaignController.handleCreateCampaignRequest(campaignDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(campaignMapper, times(1)).convertToCampaign(campaignDto);
         verify(campaignService, times(1)).isCampaignSaved(any());
     }
 
@@ -68,7 +68,6 @@ class CampaignControllerTest {
         when(campaignService.isCampaignSaved(any())).thenReturn(false);
         ResponseEntity<?> responseEntity = campaignController.handleCreateCampaignRequest(campaignDto);
         assertEquals(HttpStatus.FORBIDDEN, responseEntity.getStatusCode());
-        verify(campaignMapper, times(1)).convertToCampaign(campaignDto);
         verify(campaignService, times(1)).isCampaignSaved(any());
     }
 

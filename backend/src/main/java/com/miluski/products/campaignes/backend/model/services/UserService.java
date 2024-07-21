@@ -1,5 +1,8 @@
 package com.miluski.products.campaignes.backend.model.services;
 
+import java.util.Base64;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,7 +71,7 @@ public class UserService {
     public String getRefreshedAccessToken(HttpServletRequest request)
             throws Exception {
         String accessToken = request.getHeader("Authorization").substring(7);
-        String username = jwtTokenService.getUsername(accessToken);
+        String username = extractUsernameFromJWT(accessToken);
         User user = userRepository.findByUsername(username);
         if (user != null) {
             Boolean isRefreshTokenValid = jwtTokenService.validateToken(user.getRefreshToken(), user.getUsername());
@@ -95,6 +98,20 @@ public class UserService {
             user.setRefreshToken(refreshToken);
             userRepository.save(user);
         }
+    }
+
+    private static String extractUsernameFromJWT(String jwt) {
+        try {
+            String[] parts = jwt.split("\\.");
+            if (parts.length == 3) {
+                String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
+                JSONObject jsonObject = new JSONObject(payload);
+                return jsonObject.optString("sub", "Username not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Invalid JWT";
     }
 
 }

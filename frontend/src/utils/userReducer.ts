@@ -1,7 +1,9 @@
 import { User } from "./User";
 import {
   CHANGE_ACCOUNT_BALANCE,
+  CHANGE_IS_LOGIN_ATTEMPT_STARTED,
   CHANGE_IS_LOGIN_SUCCESSFULL,
+  CHANGE_IS_LOGOUT_ATTEMPT_STARTED,
   CHANGE_IS_PASSWORD_VALID,
   CHANGE_IS_USERNAME_VALID,
   CHANGE_PASSWORD,
@@ -15,6 +17,8 @@ const intialState = {
   isUsernameValid: undefined,
   isPasswordValid: undefined,
   isLoginSuccessfull: undefined,
+  isLoginAttemptStarted: false,
+  isLogoutAttemptStarted: false,
 };
 
 export function userReducer(state = intialState, action: User): User {
@@ -48,6 +52,16 @@ export function userReducer(state = intialState, action: User): User {
       return {
         ...state,
         isLoginSuccessfull: action.isLoginSuccessfull,
+      };
+    case CHANGE_IS_LOGIN_ATTEMPT_STARTED:
+      return {
+        ...state,
+        isLoginAttemptStarted: action.isLoginAttemptStarted,
+      };
+    case CHANGE_IS_LOGOUT_ATTEMPT_STARTED:
+      return {
+        ...state,
+        isLogoutAttemptStarted: state.isLogoutAttemptStarted,
       };
     default:
       return state;

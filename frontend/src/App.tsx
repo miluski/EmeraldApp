@@ -1,9 +1,7 @@
 import { Provider } from "react-redux";
-import {
-  createBrowserRouter,
-  RouterProvider
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { combineReducers, legacy_createStore } from "redux";
+import { campaignReducer } from "./utils/campaignReducer";
 import { userReducer } from "./utils/userReducer";
 import AccessDenied from "./views/AccessDenied";
 import { GuardView } from "./views/GuardView";
@@ -33,6 +31,7 @@ const browserRouter = createBrowserRouter([
 function App() {
   const reducers = combineReducers({
     userReducer,
+    campaignReducer,
   });
   const store = legacy_createStore(reducers);
   return (

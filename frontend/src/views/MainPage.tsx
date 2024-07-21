@@ -4,6 +4,7 @@ import {
   AppBar,
   Box,
   Button,
+  CircularProgress,
   CssBaseline,
   Divider,
   Drawer,
@@ -16,14 +17,24 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Campaign } from "../utils/Campaign";
 import { handleLogoutButtonPress } from "../utils/handleLogoutButtonPress";
+import { User } from "../utils/User";
 import AddCampaignView from "./AddCampaignView";
 import MyCampaignesView from "./MyCampaignesView";
 
 export default function MainPage() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLogoutAttemptStarted } = useSelector(
+    (state: User) => state.userReducer as unknown as User
+  );
+  const { isCampaignAdded } = useSelector(
+    (state: Campaign) => state.campaignReducer as unknown as Campaign
+  );
   const { username, accountBalance } = JSON.parse(
     localStorage.getItem("userCredentials") ??
       '{"username": "", "accountBalance": 0}'
@@ -40,6 +51,8 @@ export default function MainPage() {
   function formatBalance(balance: string) {
     return balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
+
+  useEffect(() => {}, [isCampaignAdded]);
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
@@ -118,7 +131,7 @@ export default function MainPage() {
             variant="contained"
             color="success"
             className="w-[50%]"
-            onClick={async () => handleLogoutButtonPress(navigate)}
+            onClick={async () => handleLogoutButtonPress(navigate, dispatch)}
           >
             Logout
           </Button>
@@ -131,6 +144,11 @@ export default function MainPage() {
         <Toolbar />
         {selectedIndex === 0 ? <MyCampaignesView /> : <AddCampaignView />}
       </Box>
+      {isLogoutAttemptStarted && (
+        <div className="absolute top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50">
+          <CircularProgress className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        </div>
+      )}
     </Box>
   );
 }
