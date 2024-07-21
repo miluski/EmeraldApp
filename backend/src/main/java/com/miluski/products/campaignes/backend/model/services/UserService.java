@@ -105,7 +105,7 @@ public class UserService {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        cookie.setDomain("emerald-app-88c863e81f66.herokuapp.com/");
+        cookie.setDomain("emerald-app-88c863e81f66.herokuapp.com");
         return cookie;
     }
 
