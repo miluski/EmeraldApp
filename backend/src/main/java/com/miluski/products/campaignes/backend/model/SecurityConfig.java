@@ -18,18 +18,43 @@ import com.miluski.products.campaignes.backend.model.services.UserDetailsService
 
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Security configuration class for the application.
+ * This class configures Spring Security for the application, including CORS,
+ * CSRF, session management,
+ * authentication, and authorization rules. It also defines beans for the
+ * authentication manager,
+ * security filter chain, and session event publisher.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtTokenService jwtTokenService;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
+    /**
+     * Constructs the SecurityConfig with required services.
+     * 
+     * @param userDetailsServiceImpl Service for loading user details.
+     * @param jwtTokenService        Service for JWT token operations.
+     */
     @Autowired
     public SecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl, JwtTokenService jwtTokenService) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
         this.jwtTokenService = jwtTokenService;
     }
 
+    /**
+     * Configures the security filter chain for HTTP requests.
+     * This method sets up the security rules for CSRF, CORS, headers, session
+     * management, authorization,
+     * exception handling, and adds a custom JWT request filter before the
+     * UsernamePasswordAuthenticationFilter.
+     * 
+     * @param httpSecurity The HttpSecurity to configure.
+     * @return The configured SecurityFilterChain.
+     * @throws Exception if an error occurs during the configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -37,7 +62,7 @@ public class SecurityConfig {
                 .cors((cors) -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.addAllowedOrigin("http://localhost:5173");
+                    config.addAllowedOrigin("https://emerald-app-88c863e81f66.herokuapp.com");
                     config.addAllowedHeader("*");
                     config.addAllowedMethod("*");
                     return config;
@@ -64,6 +89,13 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
+    /**
+     * Configures the AuthenticationManager bean.
+     * This method sets up the DaoAuthenticationProvider with a custom user details
+     * service and password encoder.
+     * 
+     * @return The configured AuthenticationManager.
+     */
     @Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
@@ -73,6 +105,13 @@ public class SecurityConfig {
         return new ProviderManager(daoAuthenticationProvider);
     }
 
+    /**
+     * Configures the HttpSessionEventPublisher bean.
+     * This bean is responsible for publishing session creation and destruction
+     * events to Spring Security.
+     * 
+     * @return The HttpSessionEventPublisher bean.
+     */
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
