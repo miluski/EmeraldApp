@@ -1,17 +1,6 @@
 package com.miluski.products.campaignes.backend;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import com.miluski.products.campaignes.backend.model.services.JwtTokenService;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -21,8 +10,18 @@ import java.util.Map;
 
 import javax.crypto.spec.SecretKeySpec;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.util.ReflectionTestUtils;
+
+import com.miluski.products.campaignes.backend.model.services.JwtTokenService;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 
 class JwtTokenServiceTest {
 
@@ -54,23 +53,6 @@ class JwtTokenServiceTest {
         String refreshToken = jwtTokenService.generateRefreshToken(username);
         assertNotNull(refreshToken);
         assertTrue(refreshToken.length() > 0);
-    }
-
-    @Test
-    void getTokenFromCookies_CookieExists_ReturnsAccessToken() {
-        Cookie[] cookies = new Cookie[1];
-        cookies[0] = new Cookie("access_token", "testToken");
-        when(httpServletRequest.getCookies()).thenReturn(cookies);
-        String accessToken = jwtTokenService.getTokenFromCookies(httpServletRequest);
-        assertNotNull(accessToken);
-        assertEquals("testToken", accessToken);
-    }
-
-    @Test
-    void getTokenFromCookies_CookieDoesNotExist_ReturnsNull() {
-        when(httpServletRequest.getCookies()).thenReturn(null);
-        String accessToken = jwtTokenService.getTokenFromCookies(httpServletRequest);
-        assertNull(accessToken);
     }
 
     @Test

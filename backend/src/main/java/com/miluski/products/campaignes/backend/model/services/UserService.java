@@ -16,6 +16,14 @@ import com.miluski.products.campaignes.backend.model.repositories.UserRepository
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Service class for user-related operations.
+ * This class handles user authentication, token management, and user retrieval
+ * operations.
+ * It utilizes Spring's AuthenticationManager for authentication, a custom
+ * JwtTokenService for JWT operations,
+ * and interacts with the UserRepository for database operations.
+ */
 @Service
 public class UserService {
 
@@ -24,6 +32,18 @@ public class UserService {
     private final JwtTokenService jwtTokenService;
     private final UserRepository userRepository;
 
+    /**
+     * Constructs a UserService with required dependencies.
+     * 
+     * @param userMapper            An instance of UserMapper for DTO and entity
+     *                              conversions.
+     * @param authenticationManager An instance of AuthenticationManager for user
+     *                              authentication.
+     * @param jwtTokenService       An instance of JwtTokenService for handling JWT
+     *                              tokens.
+     * @param userRepository        An instance of UserRepository for database
+     *                              operations.
+     */
     @Autowired
     public UserService(UserMapper userMapper, AuthenticationManager authenticationManager,
             JwtTokenService jwtTokenService, UserRepository userRepository) {
@@ -33,6 +53,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Authenticates a user and returns their details as a UserDto.
+     * 
+     * @param userDto The user data transfer object containing login credentials.
+     * @return A UserDto with user details if authentication is successful, null
+     *         otherwise.
+     */
     public UserDto getAuthenticatedUserObject(UserDto userDto) {
         try {
             User user = userMapper.convertToUser(userDto);
@@ -47,6 +74,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Validates if a user logout operation is correct by nullifying their refresh
+     * token.
+     * 
+     * @param request The HttpServletRequest containing the Authorization header
+     *                with the access token.
+     * @return True if the logout operation is successful, false otherwise.
+     */
     public Boolean getIsUserLogoutCorrectly(HttpServletRequest request) {
         String accessToken = request.getHeader("Authorization").substring(7);
         try {
@@ -68,6 +103,15 @@ public class UserService {
         }
     }
 
+    /**
+     * Generates a new access token using a valid refresh token provided in the
+     * request.
+     * 
+     * @param request The HttpServletRequest containing the Authorization header
+     *                with the access token.
+     * @return A new access token if the refresh token is valid.
+     * @throws Exception if the refresh token is invalid or the user is not found.
+     */
     public String getRefreshedAccessToken(HttpServletRequest request)
             throws Exception {
         String accessToken = request.getHeader("Authorization").substring(7);
@@ -85,6 +129,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Generates a new access token and assigns a new refresh token to the user.
+     * 
+     * @param username The username of the user for whom to generate and assign
+     *                 tokens.
+     * @return The generated access token.
+     */
     public String getAccessToken(String username) {
         String accessToken = jwtTokenService.generateToken(username);
         String refreshToken = jwtTokenService.generateRefreshToken(username);
@@ -92,6 +143,13 @@ public class UserService {
         return accessToken;
     }
 
+    /**
+     * Assigns a refresh token to a user and saves it in the database.
+     * 
+     * @param username     The username of the user to whom the refresh token is
+     *                     assigned.
+     * @param refreshToken The refresh token to be assigned.
+     */
     public void assignRefreshTokenToUser(String username, String refreshToken) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
@@ -100,6 +158,12 @@ public class UserService {
         }
     }
 
+    /**
+     * Extracts the username from a JWT token.
+     * 
+     * @param jwt The JWT token from which to extract the username.
+     * @return The username if extraction is successful, "Invalid JWT" otherwise.
+     */
     private static String extractUsernameFromJWT(String jwt) {
         try {
             String[] parts = jwt.split("\\.");
