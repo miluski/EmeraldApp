@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://emerald-app-backend-5c109de0be17.herokuapp.com/",
+  baseURL: "http://localhost:8080",
   headers: {
     "Content-Type": "application/json",
   }

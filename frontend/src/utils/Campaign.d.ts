@@ -12,6 +12,7 @@ export type Campaign = {
     town: string;
     radius: number;
     userDto?: User;
+    campaignToEdit?: Campaign;
     isCampaignNameValid?: boolean;
     isKeywordsValid?: boolean;
     isBidAmountValid?: boolean;
@@ -20,5 +21,6 @@ export type Campaign = {
     isTownValid?: boolean;
     isRadiusValid?: boolean;
     isCampaignAdded?: boolean;
+    canUpdateBalance?: boolean;
     campaignReducer?: Reducer<Campaign, Campaign>;
 }

@@ -10,72 +10,54 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Campaign } from "../utils/Campaign";
-import {
-  CHANGE_BID_AMOUNT,
-  CHANGE_CAMPAIGN_FUND,
-  CHANGE_CAMPAIGN_NAME,
-  CHANGE_CAMPAIGN_TO_EDIT,
-  CHANGE_KEYWORDS,
-  CHANGE_RADIUS,
-  CHANGE_STATUS,
-  CHANGE_TOWN,
-} from "../utils/CampaignActionTypes";
-import { handleAddCampaignButtonPress } from "../utils/handleAddCampaignButtonPress";
+import { handleEditCampaign } from "../utils/handleEditCampaign";
 import { validateCampaignData } from "../utils/validateCampaignData";
 import TagsInput from "./TagsInput";
-import { useEffect } from "react";
 
-export default function AddCampaignForm() {
+export default function EditCampaignView() {
   const dispatch = useDispatch();
   const {
-    campaignName,
-    keywords,
-    bidAmount,
-    campaignFund,
-    status,
-    town,
-    radius,
+    campaignToEdit,
     isCampaignNameValid,
+    isCampaignFundValid,
     isKeywordsValid,
     isBidAmountValid,
-    isCampaignFundValid,
     isTownValid,
   } = useSelector(
     (state: Campaign) => state.campaignReducer as unknown as Campaign
   );
-  useEffect(() => {
-    dispatch({ type: CHANGE_CAMPAIGN_TO_EDIT, campaignToEdit: undefined });
-  }, []);
-  return (
+  const [editedCampaign, setEditedCampaign] = useState({ ...campaignToEdit });
+
+  const handleChange = (value: any, field: any) => {
+    editedCampaign && setEditedCampaign({ ...editedCampaign, [field]: value });
+  };
+
+  return campaignToEdit ? (
     <div className="flex justify-center items-center mt-2">
       <form
         className="flex flex-col items-center text-center gap-5 max-w-[300px] pb-5"
         action=""
       >
-        <h1>Add new campaign</h1>
+        <h1>Edit campaign number {campaignToEdit.id}</h1>
         <TextField
           label="Campaign Name"
           variant="outlined"
           name="campaignName"
-          value={campaignName}
+          value={editedCampaign.campaignName}
           error={isCampaignNameValid === false}
           helperText={
             isCampaignNameValid === false ? "Campaign name is required" : ""
           }
-          onChange={(event) =>
-            dispatch({
-              type: CHANGE_CAMPAIGN_NAME,
-              campaignName: event.target.value,
-            })
-          }
+          onChange={(event) => handleChange(event.target.value, "campaignName")}
           required
         />
         <TagsInput
-          value={keywords}
+          value={editedCampaign.keywords}
           onChange={(newKeywords: string[]) =>
-            dispatch({ type: CHANGE_KEYWORDS, keywords: newKeywords })
+            handleChange(newKeywords, "keywords")
           }
           error={isKeywordsValid === false}
           helperText={
@@ -87,16 +69,13 @@ export default function AddCampaignForm() {
           variant="outlined"
           type="number"
           name="bidAmount"
-          value={bidAmount}
+          value={editedCampaign.bidAmount}
           error={isBidAmountValid === false}
           helperText={
             isBidAmountValid === false ? "Minimum bid amount is 1" : ""
           }
           onChange={(event) =>
-            dispatch({
-              type: CHANGE_BID_AMOUNT,
-              bidAmount: event.target.value,
-            })
+            handleChange(Number(event.target.value), "bidAmount")
           }
           inputProps={{ min: 1 }}
           required
@@ -106,16 +85,13 @@ export default function AddCampaignForm() {
           variant="outlined"
           type="number"
           name="campaignFund"
-          value={campaignFund}
+          value={editedCampaign.campaignFund}
           error={isCampaignFundValid === false}
           helperText={
             isCampaignFundValid === false ? "Minimum campaign fund is 500" : ""
           }
           onChange={(event) =>
-            dispatch({
-              type: CHANGE_CAMPAIGN_FUND,
-              campaignFund: event.target.value,
-            })
+            handleChange(Number(event.target.value), "campaignFund")
           }
           inputProps={{ min: 500 }}
           required
@@ -124,31 +100,23 @@ export default function AddCampaignForm() {
         <FormControlLabel
           control={
             <Switch
-              checked={status}
+              checked={editedCampaign.status}
               onChange={(event: any) => {
-                dispatch({
-                  type: CHANGE_STATUS,
-                  status: event.target.checked,
-                });
+                handleChange(event.target.checked, "status");
               }}
             />
           }
-          label={status ? "On" : "Off"}
+          label={editedCampaign.status ? "On" : "Off"}
         />
         <FormControl fullWidth error={isTownValid === false}>
           <InputLabel id="town-select-label">Town</InputLabel>
           <Select
             labelId="town-select-label"
             id="town-select"
-            value={town}
+            value={editedCampaign.town}
             label="Town"
             name="town"
-            onChange={(event) =>
-              dispatch({
-                type: CHANGE_TOWN,
-                town: event.target.value,
-              })
-            }
+            onChange={(event) => handleChange(event.target.value, "town")}
             required
           >
             <MenuItem value="Kraków">Kraków</MenuItem>
@@ -164,12 +132,9 @@ export default function AddCampaignForm() {
           Radius (km)
         </Typography>
         <Slider
-          value={radius}
+          value={editedCampaign.radius}
           onChange={(_event: any, newValue: number | number[]) =>
-            dispatch({
-              type: CHANGE_RADIUS,
-              radius: newValue,
-            })
+            handleChange(newValue, "radius")
           }
           aria-labelledby="radius-slider"
           valueLabelDisplay="on"
@@ -181,24 +146,26 @@ export default function AddCampaignForm() {
           variant="contained"
           color="success"
           onClick={async () => {
-            const campaignObject = {
-              campaignName: campaignName,
-              keywords: keywords,
-              bidAmount: bidAmount,
-              campaignFund: campaignFund,
-              status: status,
-              town: town,
-              radius: radius,
-            };
-            const isValid = validateCampaignData(campaignObject, dispatch);
+            const isValid = validateCampaignData(
+              editedCampaign as Campaign,
+              dispatch
+            );
+            editedCampaign.canUpdateBalance =
+              campaignToEdit.campaignFund !== editedCampaign.campaignFund;
             isValid
-              ? handleAddCampaignButtonPress(campaignObject, dispatch)
+              ? await handleEditCampaign(
+                  campaignToEdit.id ?? -1,
+                  editedCampaign as Campaign,
+                  dispatch
+                )
               : alert("Wprowadzone dane są nieprawidłowe!");
           }}
         >
-          Add campaign
+          Edit campaign
         </Button>
       </form>
     </div>
+  ) : (
+    <></>
   );
 }

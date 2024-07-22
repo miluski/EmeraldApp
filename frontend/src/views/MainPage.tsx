@@ -1,4 +1,5 @@
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import EditNoteIcon from "@mui/icons-material/EditNote";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import {
   AppBar,
@@ -17,19 +18,21 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Campaign } from "../utils/Campaign";
 import { handleLogoutButtonPress } from "../utils/handleLogoutButtonPress";
 import { User } from "../utils/User";
+import { CHANGE_SELECTED_MAIN_PAGE_INDEX } from "../utils/UserActionTypes";
 import AddCampaignView from "./AddCampaignView";
+import EditCampaignView from "./EditCampaignView";
 import MyCampaignesView from "./MyCampaignesView";
 
 export default function MainPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isLogoutAttemptStarted } = useSelector(
+  const { isLogoutAttemptStarted, selectedMainPageIndex } = useSelector(
     (state: User) => state.userReducer as unknown as User
   );
   const { isCampaignAdded } = useSelector(
@@ -42,14 +45,16 @@ export default function MainPage() {
   const balanceFormatted = formatBalance(accountBalance);
   const balanceStyle = { color: accountBalance > 0 ? "green" : "inherit" };
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   const handleListItemClick = (index: number) => {
-    setSelectedIndex(index);
+    dispatch({
+      type: CHANGE_SELECTED_MAIN_PAGE_INDEX,
+      selectedMainPageIndex: index,
+    });
   };
 
   function formatBalance(balance: string) {
-    return balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const roundedBalance = parseFloat(balance).toFixed(2);
+    return roundedBalance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
 
   useEffect(() => {}, [isCampaignAdded]);
@@ -96,12 +101,12 @@ export default function MainPage() {
         </Paper>
         <Divider />
         <List>
-          {["My campaignes", "Add campaign"].map(
+          {["My campaignes", "Add campaign", "Edit campaign"].map(
             (text: string, index: number) => (
               <ListItem key={index} disablePadding>
                 <ListItemButton
-                  selected={selectedIndex === index}
-                  onClick={() => handleListItemClick(index)}
+                  selected={selectedMainPageIndex === index}
+                  onClick={() => index !== 2 && handleListItemClick(index)}
                   sx={{
                     "&.Mui-selected": {
                       backgroundColor: "#dedede",
@@ -113,10 +118,20 @@ export default function MainPage() {
                     "&:hover": {
                       backgroundColor: "#e0e0e0",
                     },
+                    ...(index === 2 && {
+                      pointerEvents: "none",
+                      color: "action.disabled",
+                    }),
                   }}
                 >
                   <ListItemIcon>
-                    {index === 0 ? <TrendingUpIcon /> : <AddBoxIcon />}
+                    {index === 0 ? (
+                      <TrendingUpIcon />
+                    ) : index === 1 ? (
+                      <AddBoxIcon />
+                    ) : (
+                      <EditNoteIcon />
+                    )}
                   </ListItemIcon>
                   <ListItemText
                     primary={<span style={{ color: "gray" }}>{text}</span>}
@@ -142,7 +157,13 @@ export default function MainPage() {
         sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
       >
         <Toolbar />
-        {selectedIndex === 0 ? <MyCampaignesView /> : <AddCampaignView />}
+        {selectedMainPageIndex === 0 ? (
+          <MyCampaignesView />
+        ) : selectedMainPageIndex === 1 ? (
+          <AddCampaignView />
+        ) : (
+          <EditCampaignView />
+        )}
       </Box>
       {isLogoutAttemptStarted && (
         <div className="absolute top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50">
