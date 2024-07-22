@@ -7,6 +7,7 @@ import {
   CHANGE_IS_PASSWORD_VALID,
   CHANGE_IS_USERNAME_VALID,
   CHANGE_PASSWORD,
+  CHANGE_SELECTED_MAIN_PAGE_INDEX,
   CHANGE_USERNAME,
 } from "./UserActionTypes";
 
@@ -19,6 +20,7 @@ const intialState = {
   isLoginSuccessfull: undefined,
   isLoginAttemptStarted: false,
   isLogoutAttemptStarted: false,
+  selectedMainPageIndex: 0,
 };
 
 export function userReducer(state = intialState, action: User): User {
@@ -61,7 +63,12 @@ export function userReducer(state = intialState, action: User): User {
     case CHANGE_IS_LOGOUT_ATTEMPT_STARTED:
       return {
         ...state,
-        isLogoutAttemptStarted: state.isLogoutAttemptStarted,
+        isLogoutAttemptStarted: action.isLogoutAttemptStarted,
+      };
+    case CHANGE_SELECTED_MAIN_PAGE_INDEX:
+      return {
+        ...state,
+        selectedMainPageIndex: action.selectedMainPageIndex,
       };
     default:
       return state;

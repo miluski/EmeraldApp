@@ -3,6 +3,7 @@ import {
   CHANGE_BID_AMOUNT,
   CHANGE_CAMPAIGN_FUND,
   CHANGE_CAMPAIGN_NAME,
+  CHANGE_CAMPAIGN_TO_EDIT,
   CHANGE_IS_BID_AMOUNT_VALID,
   CHANGE_IS_CAMPAIGN_ADDED,
   CHANGE_IS_CAMPAIGN_FUND_VALID,
@@ -19,7 +20,7 @@ import {
 const initialState = {
   campaignName: "",
   keywords: ["promotion", "campaign"],
-  bidAmount: 500,
+  bidAmount: 1,
   campaignFund: 500,
   status: true,
   town: "Kraków",
@@ -30,6 +31,7 @@ const initialState = {
   isCampaignFundValid: undefined,
   isTownValid: undefined,
   isCampaignAdded: false,
+  campaignToEdit: undefined,
 };
 
 export function campaignReducer(state = initialState, action: Campaign) {
@@ -98,6 +100,11 @@ export function campaignReducer(state = initialState, action: Campaign) {
       return {
         ...state,
         isCampaignAdded: action.isCampaignAdded,
+      };
+    case CHANGE_CAMPAIGN_TO_EDIT:
+      return {
+        ...state,
+        campaignToEdit: action.campaignToEdit,
       };
     case RESET_CAMPAIGN_REDUCER:
       return initialState;

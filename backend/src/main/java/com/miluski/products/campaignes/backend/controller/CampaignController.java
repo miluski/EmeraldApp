@@ -54,6 +54,10 @@ public class CampaignController {
     @PatchMapping("/{id}")
     public ResponseEntity<?> handleEditCampaignRequest(@PathVariable Long id, @RequestBody CampaignDto campaignDto) {
         Boolean isCampaignEdited = campaignService.isCampaignEdited(id, campaignDto);
+        Boolean canUpdateBalance = campaignDto.getCanUpdateBalance();
+        if (canUpdateBalance) {
+            campaignService.updateUserBalance(campaignMapper.convertToCampaign(campaignDto));
+        }
         return isCampaignEdited ? ResponseEntity.status(HttpStatus.OK).build()
                 : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }

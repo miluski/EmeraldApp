@@ -8,9 +8,12 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { CHANGE_CAMPAIGN_TO_EDIT } from "../utils/CampaignActionTypes";
 import { getUserCampaignes } from "../utils/getUserCampaignes";
 import { handleDeleteCampaign } from "../utils/handleDeleteCampaign";
+import { CHANGE_SELECTED_MAIN_PAGE_INDEX } from "../utils/UserActionTypes";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -55,8 +58,10 @@ function createData(
 
 export default function MyCampaignesView() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [rows, setRows] = useState<any[]>([]);
   useEffect(() => {
+    dispatch({ type: CHANGE_CAMPAIGN_TO_EDIT, campaignToEdit: undefined });
     (async () => {
       const campaignesArray = await getUserCampaignes();
       if (campaignesArray != null && campaignesArray.length > 0) {
@@ -127,7 +132,21 @@ export default function MyCampaignesView() {
                 >
                   Delete
                 </Button>
-                <Button variant="contained" color="warning" className="w-[25%]">
+                <Button
+                  variant="contained"
+                  color="warning"
+                  className="w-[25%]"
+                  onClick={() => {
+                    dispatch({
+                      type: CHANGE_CAMPAIGN_TO_EDIT,
+                      campaignToEdit: row,
+                    });
+                    dispatch({
+                      type: CHANGE_SELECTED_MAIN_PAGE_INDEX,
+                      selectedMainPageIndex: 2,
+                    });
+                  }}
+                >
                   Edit
                 </Button>
               </StyledTableCell>

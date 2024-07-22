@@ -12,6 +12,7 @@ public class CampaignDto {
     private String status;
     private String town;
     private Double radius;
+    private Boolean canUpdateBalance;
 
     public UserDto getUserDto() {
         return this.userDto;
@@ -83,6 +84,14 @@ public class CampaignDto {
 
     public void setRadius(Double radius) {
         this.radius = radius;
+    }
+
+    public Boolean getCanUpdateBalance() {
+        return this.canUpdateBalance;
+    }
+
+    public void setCanUpdateBalance(Boolean canUpdateBalance) {
+        this.canUpdateBalance = canUpdateBalance;
     }
 
     @Override
