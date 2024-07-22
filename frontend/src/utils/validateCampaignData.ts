@@ -21,7 +21,6 @@ export function validateCampaignData(
     Array.isArray(campaign.keywords) && campaign.keywords.length !== 0;
   const isBidAmountValid = Number(campaign.bidAmount) >= 500;
   const isCampaignFundValid = Number(campaign.campaignFund) >= 500;
-  const isStatusValid = typeof campaign.status === "boolean";
   const isTownValid = campaign.town.trim().length > 0;
   const isRadiusValid = 
     Number(campaign.radius) >= 1 &&
@@ -49,7 +48,6 @@ export function validateCampaignData(
     isKeywordsValid &&
     isBidAmountValid &&
     isCampaignFundValid &&
-    isStatusValid &&
     isTownValid &&
     isRadiusValid &&
     hasUserFunds
