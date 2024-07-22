@@ -121,12 +121,12 @@ export default function AddCampaignForm() {
           control={
             <Switch
               checked={status}
-              onChange={(event: any) =>
+              onChange={(event: any) => {
                 dispatch({
                   type: CHANGE_STATUS,
-                  campaignName: event.target.checked,
-                })
-              }
+                  status: event.target.checked,
+                });
+              }}
             />
           }
           label={status ? "On" : "Off"}
