@@ -8,7 +8,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getUserCampaignes } from "../utils/getUserCampaignes";
+import { handleDeleteCampaign } from "../utils/handleDeleteCampaign";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -52,6 +54,7 @@ function createData(
 }
 
 export default function MyCampaignesView() {
+  const navigate = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
   useEffect(() => {
     (async () => {
@@ -114,7 +117,14 @@ export default function MyCampaignesView() {
               <StyledTableCell align="center">{row.town}</StyledTableCell>
               <StyledTableCell align="center">{row.radius}</StyledTableCell>
               <StyledTableCell align="center" className="flex space-x-4">
-                <Button variant="contained" color="error" className="w-[25%]">
+                <Button
+                  variant="contained"
+                  color="error"
+                  className="w-[25%]"
+                  onClick={async () =>
+                    await handleDeleteCampaign(row.id, navigate)
+                  }
+                >
                   Delete
                 </Button>
                 <Button variant="contained" color="warning" className="w-[25%]">
