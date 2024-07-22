@@ -10,7 +10,7 @@ export async function handleLogoutButtonPress(
     type: CHANGE_IS_LOGOUT_ATTEMPT_STARTED,
     isLogoutAttemptStarted: true,
   });
-  const response = await axiosInstance.get("/api/auth/user/logout");
+  await axiosInstance.get("/api/auth/user/logout");
   localStorage.removeItem("isLoggedIn");
   localStorage.removeItem("userCredentials");
   localStorage.removeItem("accessToken");
@@ -18,7 +18,5 @@ export async function handleLogoutButtonPress(
     type: CHANGE_IS_LOGOUT_ATTEMPT_STARTED,
     isLogoutAttemptStarted: false,
   });
-  response.status === 200
-    ? navigate("/")
-    : alert("Wystąpił błąd przy próbie wylogowania. Spróbuj ponownie później!");
+  navigate("/");
 }
