@@ -93,6 +93,7 @@ class CampaignControllerTest {
     void handleEditCampaignRequest_ValidIdAndCampaignDto_ReturnsHttpStatusOk() {
         Long id = 1L;
         CampaignDto campaignDto = new CampaignDto();
+        campaignDto.setCanUpdateBalance(false);
         when(campaignService.isCampaignEdited(id, campaignDto)).thenReturn(true);
         ResponseEntity<?> responseEntity = campaignController.handleEditCampaignRequest(id, campaignDto);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -103,6 +104,7 @@ class CampaignControllerTest {
     void handleEditCampaignRequest_ValidIdAndCampaignDto_ReturnsHttpStatusNotFound() {
         Long id = 1L;
         CampaignDto campaignDto = new CampaignDto();
+        campaignDto.setCanUpdateBalance(false);
         when(campaignService.isCampaignEdited(id, campaignDto)).thenReturn(false);
         ResponseEntity<?> responseEntity = campaignController.handleEditCampaignRequest(id, campaignDto);
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
