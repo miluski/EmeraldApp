@@ -4,6 +4,7 @@ export type User = {
     type?: string;
     username: string;
     password: string;
+    selectedMainPageIndex?: number;
     accountBalance?: number;
     isUsernameValid?: boolean;
     isPasswordValid?: boolean;
