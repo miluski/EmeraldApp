@@ -1,36 +1,64 @@
-### RecruitmentTask
+# EmeraldApp
 
-Wersja live znajduje się na stronie: https://emerald-app-88c863e81f66.herokuapp.com
+An Fullstack web application which is an sample app showing CRUD working of ability to add, edit, delete or show campaignes assigned to specified user account
 
-Dokonane założenia:
+## Tech Stack
 
-- Każdy sprzedawca musi mieć konto w serwisie, aby znać swój stan konta i aby ten stan konta był aktualizowany przy każdym dodaniu kampanii marketingowej produktu.
+**Frontend:** React, Redux, MaterialUI, TypeScript
 
-- Tylko i wyłącznie zalogowany użytkownik może mieć dostęp do dodawania, edycji lub usuwania kampanii marketingowych. Stąd zabezpieczenie endpointów za pomocą tokenów JWT oraz panel logowania na samym początku.
+**Backend:** Java, Spring Boot, Spring Security, Spring Web, JPA, Hibernate, H2 db in memory
 
-- Każdy użytkownik ma dostęp wyłącznie do własnej puli kampanii, które utworzy.
 
-- Edycja kampanii jest możliwa po kliknięciu przycisku edytuj w tabeli.
+## Installation
 
-- Bid amount zostało potraktowane jako informacyjne pole informujące o cenie reklamowanego produktu (minimalnie 1 zł).
+Firstly, you need to go to frontend directory:
 
-- Minimalny fundusz kampanii został ustawiony na 500 zł.
+```bash
 
-- Przy ustaleniu nowego funduszu kampanii jest on pobierany na nowo z konta, ponieważ traktowane to jest jako odnowienie kampanii.
-
-- Konta utworzone do testowania działania aplikacji to:
+    cd backend
 
 ```
 
-1 konto:
+Then, install node packages using node packages manager:
 
-username: sprzedawca1
-password: Haslo@1234
+```bash
 
-2 konto:
-
-username: sprzedawca2
-password: Haslo@4321
+    npm i
 
 ```
+
+Then, go back into root directory of project and continue into backend directory:
+
+```bash
+
+    cd ..
+    cd backend
+
+```
+
+Command for running backend part of project:
+
+```bash
+    ./mvnw spring-boot:run
+```
+
+And from frontend directory run frontend part of application:
+
+```bash
+
+    npm run dev
+
+```
+
+## Screenshots
+
+![App Screenshot]()
+![App Screenshot]()
+![App Screenshot]()
+![App Screenshot]()
+
+
+## Authors
+
+- [@miluski](https://www.github.com/miluski)
 
