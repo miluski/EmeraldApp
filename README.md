@@ -52,10 +52,10 @@ And from frontend directory run frontend part of application:
 
 ## Screenshots
 
-![App Screenshot]()
-![App Screenshot]()
-![App Screenshot]()
-![App Screenshot]()
+![App Screenshot](https://github.com/miluski/EmeraldApp/blob/main/img/Zrzut%20ekranu%202024-08-17%20003436.png)
+![App Screenshot](https://github.com/miluski/EmeraldApp/blob/main/img/Zrzut%20ekranu%202024-08-17%20003700.png)
+![App Screenshot](https://github.com/miluski/EmeraldApp/blob/main/img/Zrzut%20ekranu%202024-08-17%20003727.png)
+![App Screenshot](https://github.com/miluski/EmeraldApp/blob/main/img/Zrzut%20ekranu%202024-08-17%20003801.png)
 
 
 ## Authors
